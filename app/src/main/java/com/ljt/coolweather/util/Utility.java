@@ -1,6 +1,7 @@
 package com.ljt.coolweather.util;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.ljt.coolweather.db.City;
 import com.ljt.coolweather.db.County;
@@ -17,6 +18,7 @@ public class Utility {
         {
             try {
                 JSONArray jsonArray = new JSONArray(reponse);
+                Log.d("ljt59731 length",jsonArray.length()+"");
                 for (int i=0;i<jsonArray.length();i++)
                 {
                     JSONObject provinceObject=jsonArray.getJSONObject(i);
@@ -24,6 +26,7 @@ public class Utility {
                     province.setProvinceName(provinceObject.getString("name"));
                     province.setProvinceCode(provinceObject.getInt("id"));
                     province.save();
+                    Log.d("ljt59731 province",province.getProvinceName());
                 }
                 return true;
             } catch (JSONException e) {

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class ChooseAreaFragment extends Fragment {
     public static final int LEVEL_PROVINCE=0;
@@ -122,6 +124,7 @@ public class ChooseAreaFragment extends Fragment {
 
     private void queryFromServer(String address, final String type) {
         showProgressDialog();
+        Log.d("ljt queryFromServer",address);
         HttpUtil.sendOkHttpRequest(address, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -136,7 +139,9 @@ public class ChooseAreaFragment extends Fragment {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String responseText=response.body().toString();
+                ResponseBody responseBody = response.body();
+                String responseText=responseBody.string();
+                Log.d("ljt59731",responseText);
                 boolean result=false;
                 if ("province".equals(type)){
                     result=Utility.handleProvinceResponse(responseText);
@@ -235,7 +240,8 @@ public class ChooseAreaFragment extends Fragment {
         }
         else {
           int provinceCode=selectedProvince.getProvinceCode();
-          String address=Contant.ADDRESS+provinceCode;
+          String address=Contant.ADDRESS+"/"+provinceCode;
+          Log.d("ljt59731 address",address);
           queryFromServer(address,"city");
         }
     }
