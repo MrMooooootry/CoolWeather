@@ -7,10 +7,17 @@ import java.io.Serializable;
 public class Basic   {
     //省
     @SerializedName("city")
-    public String admin_area;
+    public String cityName;
     //市ID
     @SerializedName("cid")
     public String cid;
+
+    public Update update;
+    public class Update {
+        @SerializedName("loc")
+        public String updateTime;
+    }
+
 
 
 

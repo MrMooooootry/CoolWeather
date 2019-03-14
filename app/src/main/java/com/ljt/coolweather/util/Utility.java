@@ -3,6 +3,8 @@ package com.ljt.coolweather.util;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.ljt.coolweather.JavaBean.Weather;
 import com.ljt.coolweather.db.City;
 import com.ljt.coolweather.db.County;
 import com.ljt.coolweather.db.Province;
@@ -56,6 +58,18 @@ public class Utility {
             }
         }
         return false;
+    }
+    public static Weather handleWeatherResponse(String response)
+    {
+        try {
+            JSONObject jsonObject=new JSONObject(response);
+            JSONArray jsonArray = jsonObject.getJSONArray("HeWeather");
+            String weatherContent = jsonArray.getJSONObject(0).toString();
+            return new Gson().fromJson(weatherContent,Weather.class);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
     public static boolean handleCountyResponse(String reponse,int cityId)
     {
