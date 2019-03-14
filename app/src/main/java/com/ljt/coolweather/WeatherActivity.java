@@ -1,6 +1,8 @@
 package com.ljt.coolweather;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,11 +10,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.ljt.coolweather.JavaBean.Forecast;
 import com.ljt.coolweather.JavaBean.Weather;
 import com.ljt.coolweather.util.HttpUtil;
@@ -38,16 +42,24 @@ public class WeatherActivity extends AppCompatActivity {
     private TextView comfrotText;
     private TextView carwashText;
     private TextView sportText;
+    private ImageView picImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
+        if (Build.VERSION.SDK_INT>=21)
+        {
+            View decorView = getWindow().getDecorView();
+            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
         initView();
 
     }
 
     private void initView() {
+        picImg = (ImageView)findViewById(R.id.pic_img);
         weatherLayout = (ScrollView)findViewById(R.id.weather_layout);
         titleCity = (TextView)findViewById(R.id.title_city);
         titleUpdateTime = (TextView)findViewById(R.id.title_update_time);
@@ -61,7 +73,16 @@ public class WeatherActivity extends AppCompatActivity {
 
         forecastLayout = (LinearLayout)findViewById(R.id.forecast_layout);
 
+
         SharedPreferences preferences=PreferenceManager.getDefaultSharedPreferences(this);
+        String image = preferences.getString("image", null);
+        if (image!=null)
+        {
+            Glide.with(this).load(image).into(picImg);
+        }
+        else {
+            loadPicImage();
+        }
         String weatherString = preferences.getString("weather", null);
         if (weatherString!=null)
         {
@@ -74,6 +95,31 @@ public class WeatherActivity extends AppCompatActivity {
             requestWeather(weather_id);
         }
 
+
+    }
+
+    private void loadPicImage() {
+            HttpUtil.sendOkHttpRequest(Contant.Image_ADDRESS, new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    e.printStackTrace();
+
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    final String picImageUrl = response.body().string();
+                    SharedPreferences.Editor editor=PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
+                    editor.putString("image",picImageUrl);
+                    editor.apply();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Glide.with(WeatherActivity.this).load(picImageUrl).into(picImg);
+                        }
+                    });
+                }
+            });
 
     }
 
@@ -104,6 +150,7 @@ public class WeatherActivity extends AppCompatActivity {
                 });
             }
         });
+        loadPicImage();
     }
 
     private void showWeatherInfo(Weather weather) {
