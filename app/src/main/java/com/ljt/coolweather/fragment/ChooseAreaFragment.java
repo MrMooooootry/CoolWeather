@@ -103,6 +103,11 @@ public class ChooseAreaFragment extends Fragment {
         titleText.setText("中国");
         backButton.setVisibility(View.GONE);
         provinceList=DataSupport.findAll(Province.class);
+        for (int i=0;i<provinceList.size();i++)
+        {
+            Log.d("ljt provinceList",provinceList.get(i).getProvinceName()+"");
+        }
+
         if (provinceList.size()>0)
         {
             dataList.clear();
@@ -117,6 +122,7 @@ public class ChooseAreaFragment extends Fragment {
         }
         else {
             String address=Contant.ADDRESS;
+            Log.d("request4province",address);
             queryFromServer(address,"province");
         }
 
@@ -200,6 +206,10 @@ public class ChooseAreaFragment extends Fragment {
         backButton.setVisibility(View.VISIBLE);
         countyList=DataSupport.where("cityid=?",String.valueOf(selectedCity.getId())).find(County.class);
 
+        for (int i=0;i<countyList.size();i++)
+        {
+            Log.d("ljt countyList",countyList.get(i).getCountyName()+"");
+        }
         if (countyList.size()>0)
         {
             dataList.clear();
@@ -215,7 +225,8 @@ public class ChooseAreaFragment extends Fragment {
         else {
             int provinceCode=selectedProvince.getProvinceCode();
             int cityCode=selectedCity.getCityCode();
-            String address=Contant.ADDRESS+provinceCode+"/"+cityCode;
+            String address=Contant.ADDRESS+"/"+provinceCode+"/"+cityCode;
+            Log.d("request4Country",address);
             queryFromServer(address,"county");
         }
 
@@ -225,7 +236,10 @@ public class ChooseAreaFragment extends Fragment {
         titleText.setText(selectedProvince.getProvinceName());
         backButton.setVisibility(View.VISIBLE);
         cityList=DataSupport.where("provinceid=?",String.valueOf(selectedProvince.getId())).find(City.class);
-
+        for (int i=0;i<cityList.size();i++)
+        {
+            Log.d("ljt cityList",cityList.get(i).getCityName()+"");
+        }
         if (cityList.size()>0)
         {
             dataList.clear();
@@ -241,7 +255,7 @@ public class ChooseAreaFragment extends Fragment {
         else {
           int provinceCode=selectedProvince.getProvinceCode();
           String address=Contant.ADDRESS+"/"+provinceCode;
-          Log.d("ljt59731 address",address);
+            Log.d("request4city",address);
           queryFromServer(address,"city");
         }
     }

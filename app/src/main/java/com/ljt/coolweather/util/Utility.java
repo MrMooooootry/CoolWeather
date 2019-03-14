@@ -43,10 +43,10 @@ public class Utility {
                 JSONArray jsonArray = new JSONArray(reponse);
                 for (int i=0;i<jsonArray.length();i++)
                 {
-                    JSONObject provinceObject=jsonArray.getJSONObject(i);
+                    JSONObject cityObject=jsonArray.getJSONObject(i);
                     City city=new City();
-                    city.setCityName(provinceObject.getString("name"));
-                    city.setCityCode(provinceObject.getInt("id"));
+                    city.setCityName(cityObject.getString("name"));
+                    city.setCityCode(cityObject.getInt("id"));
                     city.setProvinceId(provinceId);
                     city.save();
                 }
