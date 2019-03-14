@@ -3,6 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
 
     android:layout_height="?attr/actionBarSize">
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/nav_button"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+       android:layout_alignParentRight="true"
+        android:background="@drawable/night_biz_pc_main_golden_icon"
+        />
     <TextView
         android:id="@+id/title_city"
         android:layout_centerInParent="true"
